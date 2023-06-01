@@ -1,12 +1,12 @@
 <div disply="flex"> <a href="https://fastify.io/">
     <img
       src="https://github.com/fastify/graphics/raw/HEAD/fastify-landscape-outlined.svg"
-      width="250"
+      width="400"
       height="auto"
     />
       <img
-      src=" https://www.vision33.com/hs-fs/hubfs/ARedesign%202018/SAP%20Business%20One%20Pages/SAP-HANA-logo_160330_154207.png?width=600&name=SAP-HANA-logo_160330_154207.png"
-      width="250"
+      src="https://www.vision33.com/hs-fs/hubfs/ARedesign%202018/SAP%20Business%20One%20Pages/SAP-HANA-logo_160330_154207.png?width=600&name=SAP-HANA-logo_160330_154207.png"
+      width="400"
       height="auto"
     />
    
