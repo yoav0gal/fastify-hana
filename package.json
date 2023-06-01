@@ -1,11 +1,19 @@
 {
   "name": "fastify-hana",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Fastify Sap Hana connection plugin",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "author": "Yoav gal",
   "license": "MIT",
-  "types": "index.d.ts",
+  "homepage": "https://github.com/yoav0gal/fastify-hana",
+  "bugs": {
+    "url": "https://github.com/yoav0gal/fastify-hana/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoav0gal/fastify-hana"
+  },
   "directories": {
     "test": "test"
   },
