@@ -1,0 +1,21 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "target": "es2017",
+    "module": "CommonJS",
+    "pretty": true,
+    "noEmitOnError": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "lib": ["esnext"],
+    "baseUrl": "."
+  },
+  "include": ["src/**/*.ts"]
+}
