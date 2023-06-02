@@ -19,9 +19,9 @@
 [![npm version](https://img.shields.io/npm/v/fastify-hana.svg?style=flat-square)](https://www.npmjs.com/package/fastify-hana)
 [![License](https://img.shields.io/npm/l/fastify-hana.svg?style=flat-square)](https://github.com/example-user/fastify-hana/blob/main/LICENSE)
 
-SAP HANA integration plugin for Fastify
+SAP HANA integration plugin for [Fastify](https://www.fastify.io/)
 
-The fastify-hana plugin provides seamless integration between [Fastify](https://www.fastify.io/) and SAP HANA, allowing you to easily connect and interact with your SAP HANA database within your Fastify application.
+The fastify-hana plugin provides seamless integration between Fastify and SAP HANA, allowing you to easily connect and interact with your SAP HANA database within your Fastify application.
 
 Under the hood, this plugin utilizes the official [@sap/hana-client](https://www.npmjs.com/package/@sap/hana-client) library to ensure reliable and high-performance connectivity to HANA databases.
 Read more about the hana client [here!](https://help.sap.com/docs/HANA_SERVICE_CF/1efad1691c1f496b8b580064a6536c2d/a5c332936d9f47d8b820a4ecc427352c.html)
