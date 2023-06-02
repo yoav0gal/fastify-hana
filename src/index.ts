@@ -1,8 +1,8 @@
-// hana-fastify-plugin.ts
 import fp from "fastify-plugin";
 import { FastifyInstance } from "fastify";
 import * as hana from "@sap/hana-client";
 import { HanaOptions } from "./types";
+import { namedParameterBindingSupport } from "./namedParametersSupport";
 
 export default fp<HanaOptions>(
   async (fastify: FastifyInstance, opts: HanaOptions) => {
@@ -19,7 +19,15 @@ export default fp<HanaOptions>(
 
     fastify.decorate(
       "executeQuery",
-      async (query: string, parameters: any[] = []) => {
+      async (
+        query: string,
+        parameters: { [key: string]: any } | any[] = []
+      ) => {
+        //Convert named parameter binding format to the hana client index based binding format
+        if (!Array.isArray(parameters)) {
+          [query, parameters] = namedParameterBindingSupport(query, parameters);
+        }
+
         const conn = await pool.getConnection();
         try {
           const result = await conn.exec(query, parameters);
@@ -47,6 +55,7 @@ export default fp<HanaOptions>(
       }
     );
 
+    fastify.decorate("hana", hana);
     fastify.addHook("onClose", async (_instance, done) => {
       await pool.clear();
       done();

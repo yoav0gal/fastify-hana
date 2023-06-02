@@ -84,12 +84,34 @@ server.get("/runQuery", async (request, reply) => {
 You can also pass parameters to your query:
 
 ```ts
-server.get("/runQuery", async (request, reply) => {
+server.get("/index-based-paramters-bining", async (request, reply) => {
   const result = await server.executeQuery(
     "SELECT * FROM MY_TABLE WHERE ID = ?",
     [1]
   );
   return result;
+});
+```
+
+```ts
+fastify.post("/named-parameters-binding", async (request, reply) => {
+  try {
+    const { id, name, age } = request.body;
+
+    const query =
+      "INSERT INTO myTable (id, name, age) VALUES (:id, :name, :age)";
+    const parameters = { id, name, age };
+
+    const result = await fastify.executeQuery(query, parameters);
+    console.log(result); // Process the query result
+
+    reply.send({ success: true, message: "Record inserted successfully" });
+  } catch (error) {
+    console.error(error); // Handle any errors
+    reply
+      .status(500)
+      .send({ success: false, message: "Error inserting record" });
+  }
 });
 ```
 
@@ -115,6 +137,76 @@ server.get("/runTransaction", async (request, reply) => {
 ```
 
 In this example, if either of the INSERT statements fails, both will be rolled back.
+
+### `namedParameterBindingSupport`
+
+Enables named parametes binding.
+
+```ts
+import fastify from "fastify";
+import fastifyHana, { namedParameterBindingSupport } from "./fastify-hana"; // Replace with the path to your plugin file
+
+// Create a Fastify server instance
+const app = fastify();
+
+// Register the HANA plugin
+app.register(fastifyHana, {
+  host: "your-host",
+  port: "your-port",
+  user: "your-username",
+  password: "your-password",
+  poolMax: 10,
+  poolMin: 0,
+});
+
+// Define a route that uses `executeInTransaction` and `namedParameterBindingSupport`
+app.post("/transaction-route", async (request, reply) => {
+  try {
+    const { id, name, age } = request.body;
+
+    const actions = async (conn) => {
+      const query1 =
+        "INSERT INTO myTable (id, name, age) VALUES (:id, :name, :age)";
+      const parameters1 = { id, name, age };
+
+      const [formattedQuery1, paramValues1] = namedParameterBindingSupport(
+        query1,
+        parameters1
+      );
+
+      await conn.exec(formattedQuery1, paramValues1);
+
+      const query2 = "UPDATE myTable SET name = :newName WHERE id = :id";
+      const parameters2 = { id, newName: "John Doe" };
+
+      const [formattedQuery2, paramValues2] = namedParameterBindingSupport(
+        query2,
+        parameters2
+      );
+
+      await conn.exec(formattedQuery2, paramValues2);
+    };
+
+    await app.executeInTransaction(actions);
+
+    reply.send({ success: true, message: "Transaction executed successfully" });
+  } catch (error) {
+    console.error(error); // Handle any errors
+    reply
+      .status(500)
+      .send({ success: false, message: "Error executing transaction" });
+  }
+});
+
+// Start the server
+app.listen(3000, (err) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  console.log("Server is running on port 3000");
+});
+```
 
 ### `hanaPool`
 
@@ -164,6 +256,72 @@ server.get("/directConnectionManagement", async (request, reply) => {
   }
 });
 ```
+
+### `hana`
+
+In some cases, you might need to establish a custom connection to the HANA database that uses different connection parameters than the default pool. For example, you might need to connect to a different database, or use different credentials. In this case, you could use `hana` decorator to create a new, custom connection.
+
+```ts
+import Fastify from "fastify";
+import fastifyHana, { namedParameterBindingSupport } from "fastify-hana";
+
+const fastify = Fastify();
+
+fastify.register(fastifyHana, {
+  host: "defaultHost", // Default values, these would ideally come from environment variables or config
+  port: "defaultPort",
+  user: "defaultUser",
+  password: "defaultPassword",
+});
+
+fastify.post("/customConnection", async (request, reply) => {
+  const { host, port, user, password, query, params } = request.body as any;
+
+  const connectionParameters = {
+    serverNode: `${host}:${port}`,
+    uid: user,
+    pwd: password,
+  };
+
+  const connection = fastify.hana.createConnection();
+
+  connection.connect(connectionParameters, (err) => {
+    if (err) {
+      reply
+        .code(500)
+        .send({ error: "Failed to connect to HANA database", details: err });
+    } else {
+      // Convert named parameters to index-based binding
+      const [formattedQuery, queryParameters] = namedParameterBindingSupport(
+        query,
+        params
+      );
+
+      connection.exec(formattedQuery, queryParameters, (error, results) => {
+        if (error) {
+          reply
+            .code(500)
+            .send({ error: "Query execution failed", details: error });
+        } else {
+          reply.send(results);
+        }
+
+        // Always disconnect after you're done.
+        connection.disconnect();
+      });
+    }
+  });
+});
+
+fastify.listen(3000, (err) => {
+  if (err) throw err;
+  console.log("Server is running on port 3000");
+});
+```
+
+**NOTE:** Connections created via the `hana` decorator would not be managed by the plugin's connection pool. This means that connections created this way would not be reused, and the pooling mechanisms provided by the plugin would not be effective. Each connection created using the decorated `hana` would be separate and not part of the connection pool.
+
+If your use case requires users to create their own connections manually and bypass the connection pooling provided by the plugin, use the `hana` decorator. However, it's important to carefully manage and handle the lifecycle of these connections to ensure efficient resource utilization.
 
 ---
 
