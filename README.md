@@ -50,7 +50,7 @@ Firstly, register the plugin:
 
 ```ts
 import fastify from "fastify";
-import hanaFastifyPlugin, { HanaOptions } from "@yoav0gal/fastify-hana";
+import hanaFastifyPlugin, { HanaOptions } from "fastify-hana";
 
 const server = fastify();
 
