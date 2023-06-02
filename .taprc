@@ -1,3 +1,6 @@
-ts: false
+ts: true
 jsx: false
-coverage: false
+flow: false
+coverage: true
+check-coverage: true
+files: ["./test/*.test.ts"]

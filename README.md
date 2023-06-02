@@ -15,7 +15,24 @@
 
 # fastify-hana
 
-This plugin integrates [SAP HANA client](https://help.sap.com/docs/HANA_SERVICE_CF/1efad1691c1f496b8b580064a6536c2d/a5c332936d9f47d8b820a4ecc427352c.html) with Fastify. It manages a connection pool, provides a utility to execute queries, and handles transactions on the SAP HANA database.
+[![Beta](https://img.shields.io/badge/status-beta-orange.svg)](https://github.com/yoav0gal/fastify-hana)
+[![npm version](https://img.shields.io/npm/v/fastify-hana.svg?style=flat-square)](https://www.npmjs.com/package/fastify-hana)
+[![License](https://img.shields.io/npm/l/fastify-hana.svg?style=flat-square)](https://github.com/example-user/fastify-hana/blob/main/LICENSE)
+
+SAP HANA integration plugin for Fastify
+
+The fastify-hana plugin provides seamless integration between [Fastify](https://www.fastify.io/) and SAP HANA, allowing you to easily connect and interact with your SAP HANA database within your Fastify application.
+
+Under the hood, this plugin utilizes the official [@sap/hana-client](https://www.npmjs.com/package/@sap/hana-client) library to ensure reliable and high-performance connectivity to HANA databases.
+Read more about the hana client [here!](https://help.sap.com/docs/HANA_SERVICE_CF/1efad1691c1f496b8b580064a6536c2d/a5c332936d9f47d8b820a4ecc427352c.html)
+
+## Features
+
+- Establishes a connection pool to efficiently manage database connections.
+- Provides decorators to execute queries and transactions with ease.
+- Supports named parameter binding for convenient and secure query execution.
+- Handles connection pooling and connection lifecycle management automatically.
+- Offers flexibility to directly access the underlying HANA Client API if needed.
 
 ---
 
@@ -85,7 +102,9 @@ The plugin adds the following decorators to the Fastify instance:
 
 ### `executeQuery`
 
-Executes a query on the HANA database:
+Executes a query on the HANA database.
+
+**Example 1: Basic Query**
 
 ```ts
 server.get("/runQuery", async (request, reply) => {
@@ -94,7 +113,7 @@ server.get("/runQuery", async (request, reply) => {
 });
 ```
 
-You can also pass parameters to your query:
+**Example 2: Query with Index-Based Parameter Binding**
 
 ```ts
 server.get("/index-based-paramters-bining", async (request, reply) => {
@@ -105,6 +124,8 @@ server.get("/index-based-paramters-bining", async (request, reply) => {
   return result;
 });
 ```
+
+**Example 3: Query with Named Parameters Binding**
 
 ```ts
 server.post("/named-parameters-binding", async (request, reply) => {
@@ -128,6 +149,8 @@ server.post("/named-parameters-binding", async (request, reply) => {
 });
 ```
 
+---
+
 ### `executeInTransaction`
 
 Executes a set of actions in a transaction:
@@ -149,14 +172,17 @@ server.get("/runTransaction", async (request, reply) => {
 });
 ```
 
-In this example, if either of the INSERT statements fails, both will be rolled back.
+> **NOTE:** If the transaction function fail a roll back to the transaction begining will take place.
+
+> In this example, if either of the INSERT statements fails, both will be rolled back.
+
+---
 
 ### `hanaPool`
 
-This decorator returns the pool instance thus giving full control and responsibility over the connections.
-**use with caution!**
+This decorator returns the pool instance, giving you full control and responsibility over the connections. **Use with caution!**
 
-Using hanaPool to execute a batch operation:
+#### Using `hanaPool` to execute a batch operation:
 
 ```ts
 server.post("/batchInsert", async (request, reply) => {
@@ -179,7 +205,7 @@ server.post("/batchInsert", async (request, reply) => {
 });
 ```
 
-Using hanaPool to manage connections directly:
+#### Using `hanaPool` to manage connections directly:
 
 ```ts
 server.get("/directConnectionManagement", async (request, reply) => {
@@ -199,6 +225,8 @@ server.get("/directConnectionManagement", async (request, reply) => {
   }
 });
 ```
+
+---
 
 ### `hana`
 
@@ -337,6 +365,8 @@ app.listen(3000, (err) => {
   console.log("Server is running on port 3000");
 });
 ```
+
+---
 
 ## Contributing
 
