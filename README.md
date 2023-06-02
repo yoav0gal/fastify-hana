@@ -17,7 +17,7 @@
 
 [![Beta](https://img.shields.io/badge/status-beta-orange.svg)](https://github.com/yoav0gal/fastify-hana)
 [![npm version](https://img.shields.io/npm/v/fastify-hana.svg?style=flat-square)](https://www.npmjs.com/package/fastify-hana)
-[![License](https://img.shields.io/npm/l/fastify-hana.svg?style=flat-square)](https://github.com/example-user/fastify-hana/blob/main/LICENSE)
+[![License](https://img.shields.io/npm/l/fastify-hana.svg?style=flat-square)](https://choosealicense.com/licenses/mit/)
 
 SAP HANA integration plugin for [Fastify](https://www.fastify.io/)
 
