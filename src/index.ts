@@ -94,3 +94,6 @@ export default fp<HanaOptions>(
     name: "fastify-hana",
   }
 );
+
+export { namedParameterBindingSupport } from "./namedParametersSupport";
+export { HanaOptions } from "./types";

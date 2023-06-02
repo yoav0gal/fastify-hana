@@ -39,7 +39,7 @@ Read more about the hana client [here!](https://help.sap.com/docs/HANA_SERVICE_C
 ## Installation
 
 ```shell
-npm install --save @yoav0gal/fastify-hana
+npm i fastify-hana
 ```
 
 ---
