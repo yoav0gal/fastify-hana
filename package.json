@@ -22,7 +22,9 @@
     "lint": "standard && npm run lint:typescript",
     "lint:typescript": "ts-standard",
     "test:typescript": "tsd",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "npm run build",
+    "publish": "npm publish --access public"
   },
   "keywords": [
     "fastify",
