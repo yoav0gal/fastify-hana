@@ -94,7 +94,7 @@ server.get("/index-based-paramters-bining", async (request, reply) => {
 ```
 
 ```ts
-fastify.post("/named-parameters-binding", async (request, reply) => {
+server.post("/named-parameters-binding", async (request, reply) => {
   try {
     const { id, name, age } = request.body;
 
