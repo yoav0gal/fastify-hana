@@ -72,14 +72,22 @@ server.register(hanaFastifyPlugin, hanaOpts);
 
 When registering the plugin, you need to provide `HanaOptions`:
 
-| **Option** | **Type** |                                                             **Description** |
-| :--------- | :------: | --------------------------------------------------------------------------: |
-| `host`     |  string  |                           The hostname or IP address of the SAP HANA server |
-| `port`     |  string  |                     The port number where the SAP HANA server is listening. |
-| `user`     |  string  |                      The username to authenticate with the SAP HANA server. |
-| `password` |  string  |                      The password to authenticate with the SAP HANA server. |
-| `poolMax`  |  number  | (optional) The maximum number of connections in the pool. `Defaults to 10`. |
-| `poolMin`  |  number  |  (optional) The minimum number of connections in the pool. `Defaults to 0`. |
+| **Property**  | **Type**                     | **Description**                                                       |
+| ------------- | ---------------------------- | --------------------------------------------------------------------- |
+| `host`        | string                       | The hostname or IP address of the SAP HANA database server.           |
+| `port`        | string                       | The port number used to connect to the SAP HANA database server.      |
+| `user`        | string                       | The username used for authentication to the SAP HANA database server. |
+| `password`    | string                       | The password used for authentication to the SAP HANA database server. |
+| `poolOptions` | HanaClientExplicitPoolParams | Optional. The configuration options for the connection pool.          |
+
+## HanaClientExplicitPoolParams
+
+| **Property**           | **Type** | **Description**                                                                                                              |
+| ---------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `maxConnectedOrPooled` | number   | Optional. The maximum number of open connections created by the pool. Default: 0 (no limit).                                 |
+| `maxPooledIdleTime`    | number   | Optional. The maximum time, in seconds, that connections are allowed to remain in the pool. Default: 0 (no limit).           |
+| `pingCheck`            | boolean  | Optional. Specifies whether or not the pooled connection should be tested for viability before being reused. Default: false. |
+| `poolCapacity`         | number   | Optional. The maximum number of connections allowed to be in the pool, waiting to be reused. Default: 0 (no limit).          |
 
 ---
 
