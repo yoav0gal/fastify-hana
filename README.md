@@ -59,8 +59,13 @@ const hanaOpts: HanaOptions = {
   port: "30015",
   user: "myUser",
   password: "myPassword",
-  poolMax: 10, // Optional. Default: 10
-  poolMin: 0, // Optional. Default: 0
+  // Optional more info in the next section
+  // poolOptions: {
+  //   maxConnectedOrPooled: 0,
+  //   maxPooledIdleTime: 0,
+  //   pingCheck: false,
+  //   poolCapacity: 0,
+  // },
 };
 
 server.register(hanaFastifyPlugin, hanaOpts);
