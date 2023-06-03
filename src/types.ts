@@ -16,11 +16,21 @@ declare module "fastify" {
 
 export type ExecuteQueryParameters = { [key: string]: any } | any[];
 
+export type HanaClientExplicitPoolParams = {
+  /** Maximum number of open connections created by the pool. defaults. @default 0 - no limit */
+  maxConnectedOrPooled?: number; //
+  /** Maximum time, in seconds, that connections are allowed to remain in the pool. @default - 0 no limit */
+  maxPooledIdleTime?: number;
+  /** Whether or not the pooled connection should be tested for viability before being reused. @default false */
+  pingCheck?: boolean;
+  /** Maximum number of connections allowed to be in the pool, waiting to be reused.@default 0 - no limit */
+  poolCapacity?: number;
+};
+
 export interface HanaOptions {
   host: string;
   port: string;
   user: string;
   password: string;
-  poolMax?: number;
-  poolMin?: number;
+  poolOptions?: HanaClientExplicitPoolParams;
 }

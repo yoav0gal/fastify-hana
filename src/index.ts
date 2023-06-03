@@ -3,27 +3,7 @@ import { FastifyInstance } from "fastify";
 import * as hana from "@sap/hana-client";
 import { HanaOptions, ExecuteQueryParameters } from "./types";
 import { namedParameterBindingSupport } from "./namedParametersSupport";
-
-/**
- * Formats the connection parameters for a HANA database connection and makes sure the poolSize is valid.
- * @param {HanaOptions} opts - The options object containing the connection parameters.
- * @returns {Object} The formatted connection parameters.
- */
-function formatConnectionParameters(opts: HanaOptions) {
-  const { poolMax = 10, poolMin = 0 } = opts;
-
-  const connectionParameters = {
-    serverNode: `${opts.host}:${opts.port}`,
-    uid: opts.user,
-    pwd: opts.password,
-    poolMax: Math.max(poolMax, poolMin),
-    poolMin: Math.min(poolMin, poolMax),
-  };
-  console.log(
-    `The connection pool size will vary between ${connectionParameters.poolMin}-${connectionParameters.poolMax}`
-  );
-  return connectionParameters;
-}
+import { formatConnectionParameters } from "./formatConnectionParameters";
 
 export default fp<HanaOptions>(
   async (fastify: FastifyInstance, opts: HanaOptions) => {
