@@ -326,8 +326,13 @@ app.register(fastifyHana, {
   port: "your-port",
   user: "your-username",
   password: "your-password",
-  poolMax: 10,
-  poolMin: 0,
+  // Optional more info in the next section
+  // poolOptions: {
+  //   maxConnectedOrPooled: 0,
+  //   maxPooledIdleTime: 0,
+  //   pingCheck: false,
+  //   poolCapacity: 0,
+  // },
 });
 
 // Define a route that uses `executeInTransaction` and `namedParameterBindingSupport`
