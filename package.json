@@ -1,6 +1,6 @@
 {
   "name": "fastify-hana",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Fastify Sap Hana connection plugin",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
