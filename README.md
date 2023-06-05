@@ -259,7 +259,7 @@ fastify.register(fastifyHana, {
 });
 
 fastify.post("/customConnection", async (request, reply) => {
-  const { host, port, user, password, query, params } = request.body as any;
+  const { host, port, user, password, query, params } = request.body;
 
   const connectionParameters = {
     serverNode: `${host}:${port}`,
@@ -269,37 +269,33 @@ fastify.post("/customConnection", async (request, reply) => {
 
   const connection = fastify.hana.createConnection();
 
-  connection.connect(connectionParameters, (err) => {
-    if (err) {
-      reply
-        .code(500)
-        .send({ error: "Failed to connect to HANA database", details: err });
-    } else {
-      // Convert named parameters to index-based binding
-      const [formattedQuery, queryParameters] = namedParameterBindingSupport(
-        query,
-        params
-      );
-
-      connection.exec(formattedQuery, queryParameters, (error, results) => {
-        if (error) {
-          reply
-            .code(500)
-            .send({ error: "Query execution failed", details: error });
-        } else {
-          reply.send(results);
-        }
-
-        // Always disconnect after you're done.
-        connection.disconnect();
+  try {
+    await new Promise((resolve, reject) => {
+      connection.connect(connectionParameters, (err) => {
+        if (err) reject(err);
+        resolve();
       });
-    }
-  });
-});
+    });
 
-fastify.listen(3000, (err) => {
-  if (err) throw err;
-  console.log("Server is running on port 3000");
+    const [formattedQuery, queryParameters] = namedParameterBindingSupport(
+      query,
+      params
+    );
+
+    const results = await new Promise((resolve, reject) => {
+      connection.exec(formattedQuery, queryParameters, (error, results) => {
+        if (error) reject(error);
+        resolve(results);
+      });
+    });
+
+    reply.send(results);
+  } catch (error) {
+    reply.code(500).send({ error: "Query execution failed", details: error });
+  } finally {
+    // Always disconnect after you're done.
+    connection.disconnect();
+  }
 });
 ```
 
