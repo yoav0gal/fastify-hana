@@ -64,9 +64,8 @@ export default fp<HanaOptions>(
     fastify.decorate("executeInTransaction", executeInTransaction);
 
     // Clear the pool on application close
-    fastify.addHook("onClose", async (_instance, done) => {
+    fastify.addHook("onClose", async (_instance) => {
       await pool.clear();
-      done();
     });
   },
   {
@@ -76,4 +75,4 @@ export default fp<HanaOptions>(
 );
 
 export { namedParameterBindingSupport } from "./namedParametersSupport";
-export { HanaOptions } from "./types";
+export type { HanaOptions } from "./types";
