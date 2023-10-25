@@ -13,7 +13,7 @@ export function namedParameterBindingSupport(
 
   // Replace all parameter placeholders in the query string
   const formattedQuery = query.replaceAll(
-    /:(\w+)/g,
+    /(?<!:):(\w+)/g,
     (_matchedSubString, paramName) => {
       const paramValue = params[paramName];
 
