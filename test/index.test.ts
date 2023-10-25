@@ -33,7 +33,7 @@ async function executeQueryTest(t) {
   await fastify.ready();
 
   const result = await fastify.executeQuery(
-    "SELECT * FROM TestTable WHERE id = :id",
+    'SELECT * FROM "test_module.test_folder::TestTable" WHERE id = :id',
     { id: 1 }
   );
   t.same(result, MOCK_DATA);
@@ -53,7 +53,7 @@ async function executeQueryFailTest(t) {
   await fastify.ready();
 
   try {
-    await fastify.executeQuery("SELECT * FROM TestTable WHERE id = ?", []);
+    await fastify.executeQuery('SELECT * FROM "test_module.test_folder::TestTable" WHERE id = ?', []);
     t.fail("Should have thrown an error");
   } catch (error) {
     t.type(error, Error);
@@ -76,11 +76,11 @@ async function executeInTransactionTest(t) {
   // This function was created in order to avoid tap's to-do mesage
   async function validExecuteInTransaction() {
     await fastify.executeInTransaction(async (conn) => {
-      await conn.exec("INSERT INTO MY_TABLE (ID, NAME) VALUES (:id, :name)", {
+      await conn.exec('INSERT INTO "my_module.my_folder::MY_TABLE" (ID, NAME) VALUES (:id, :name)', {
         id: 1,
         name: "test",
       });
-      await conn.exec("INSERT INTO MY_TABLE (ID, NAME) VALUES (?, ?)", [
+      await conn.exec('INSERT INTO "my_module.my_folder::MY_TABLE" (ID, NAME) VALUES (?, ?)', [
         2,
         "name2",
       ]);
@@ -105,11 +105,11 @@ async function executeInTransactionFailTest(t) {
 
   try {
     await fastify.executeInTransaction(async (conn) => {
-      await conn.exec("INSERT INTO MY_TABLE (ID, NAME) VALUES (:id, :name)", {
+      await conn.exec('INSERT INTO "my_module.my_folder::MY_TABLE" (ID, NAME) VALUES (:id, :name)', {
         id: 1,
         name: "test",
       });
-      await conn.exec("INSERT INTO MY_TABLE (ID, NAME) VALUES (?, ?)", [2]);
+      await conn.exec('INSERT INTO "my_module.my_folder::MY_TABLE" (ID, NAME) VALUES (?, ?)', [2]);
     });
     t.fail("Should have thrown an error");
   } catch (error) {
@@ -124,11 +124,11 @@ async function executeInTransactionFailTest(t) {
  */
 function namedParameterBindingTest(t) {
   const [query, parameters] = namedParameterBindingSupport(
-    "SELECT * FROM TestTable WHERE id = :id AND value = :value",
+    'SELECT * FROM "test_module.test_folder::TestTable" WHERE id = :id AND value = :value',
     { id: 1, value: "test" }
   );
 
-  t.equal(query, "SELECT * FROM TestTable WHERE id = ? AND value = ?");
+  t.equal(query, 'SELECT * FROM "test_module.test_folder::TestTable" WHERE id = ? AND value = ?');
   t.same(parameters, [1, "test"]);
   t.end();
 }
@@ -140,7 +140,7 @@ function namedParameterBindingErrorTest(t) {
   t.throws(
     () =>
       namedParameterBindingSupport(
-        "SELECT * FROM TestTable WHERE id = :id AND value = :value",
+        'SELECT * FROM "test_module.test_folder::TestTable" WHERE id = :id AND value = :value',
         { id: 1 }
       ),
     new Error("value is missing")
