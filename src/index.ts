@@ -25,7 +25,7 @@ export default fp<HanaOptions>(
         [query, parameters] = namedParameterBindingSupport(query, parameters);
       }
 
-      const conn = await pool.getConnection();
+      const conn = pool.getConnection();
       try {
         const result = await conn.exec(query, parameters);
         return result;
@@ -45,14 +45,14 @@ export default fp<HanaOptions>(
     async function executeInTransaction(
       actions: (conn: hana.Connection) => Promise<void>
     ) {
-      const conn = await pool.getConnection();
+      const conn = pool.getConnection();
       try {
-        await conn.setAutoCommit(false);
+        conn.setAutoCommit(false);
         await actions(conn);
-        await conn.commit();
+        conn.commit();
       } catch (err) {
         ``;
-        await conn.rollback();
+        conn.rollback();
         throw err;
       } finally {
         conn.disconnect();
