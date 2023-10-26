@@ -51,6 +51,7 @@ export default fp<HanaOptions>(
         await actions(conn);
         await conn.commit();
       } catch (err) {
+        ``;
         await conn.rollback();
         throw err;
       } finally {
@@ -65,7 +66,7 @@ export default fp<HanaOptions>(
 
     // Clear the pool on application close
     fastify.addHook("onClose", async (_instance) => {
-      await pool.clear();
+      pool.clear();
     });
   },
   {
