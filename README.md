@@ -98,7 +98,7 @@ When registering the plugin, you need to provide `HanaOptions`:
 
 ## API
 
-## Fatify decorators
+## Fastify decorators
 
 The plugin adds the following decorators to the Fastify instance:
 
