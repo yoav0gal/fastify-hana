@@ -46,6 +46,23 @@ async function executeQueryTest(t) {
  * This may involve setting up the database, inserting some test data, running the query, and then checking the results.
  * Note that for this test, we'll use a mock
  */
+async function executeQueryNoParamsTest(t) {
+  const fastify = Fastify();
+  fastify.register(fastifyHana, FASTIFY_HANA_OPTS);
+
+  await fastify.ready();
+
+  const result = await fastify.executeQuery("SELECT * FROM test");
+  t.same(result, MOCK_DATA);
+
+  await fastify.close();
+}
+
+/**
+ * This test would normally run a query against a real or mock HANA database to check that executeQuery is working as expected.
+ * This may involve setting up the database, inserting some test data, running the query, and then checking the results.
+ * Note that for this test, we'll use a mock
+ */
 async function executeQueryFailTest(t) {
   const fastify = Fastify();
   fastify.register(fastifyHana, FASTIFY_HANA_OPTS);
@@ -166,6 +183,8 @@ function namedParameterBindingErrorTest(t) {
 test("fastify-hana loads correctly", loadTest);
 
 test("fastify.executeQuery works correctly", executeQueryTest);
+
+test("fastify.executeQuery works without paramters", executeQueryNoParamsTest);
 
 test("fastify.executeQuery throws on error", executeQueryFailTest);
 

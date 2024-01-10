@@ -45,7 +45,7 @@ export default fp<HanaOptions>(
     async function executeInTransaction(
       actions: (conn: hana.Connection) => Promise<void>
     ) {
-      const conn = await pool.getConnection();
+      const conn = pool.getConnection();
       try {
         conn.setAutoCommit(false);
         await actions(conn);
@@ -64,7 +64,6 @@ export default fp<HanaOptions>(
     fastify.decorate("executeInTransaction", executeInTransaction);
 
     // Clear the pool on application close
-    //@ts-ignore
     fastify.addHook("onClose", async (_instance) => {
       await pool.clear();
     });

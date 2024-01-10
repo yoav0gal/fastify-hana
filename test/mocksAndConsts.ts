@@ -20,7 +20,7 @@ export const MOCK_DATA = [{ id: 1, value: "test" }];
  * @returns {Promise<any>} A promise resolving to the mocked query result.
  * @throws {Error} If the number of parameters in the query does not match the provided parameters.
  */
-async function mockExec(query: string, params: ExecuteQueryParameters) {
+async function mockExec(query: string, params: ExecuteQueryParameters = []) {
   if (!Array.isArray(params)) {
     [query, params] = namedParameterBindingSupport(query, params);
   }
@@ -56,7 +56,7 @@ function countSubstringOccurrences(str: string, substring: string) {
 
 const hanaClientMock = {
   createPool: () => ({
-    getConnection: async () => ({
+    getConnection: () => ({
       exec: mockExec, // Mocking the exec function
       disconnect: async () => {},
       setAutoCommit: async () => {},
