@@ -98,7 +98,7 @@ When registering the plugin, you need to provide `HanaOptions`:
 
 ## API
 
-## fatify decorators
+## Fatify decorators
 
 The plugin adds the following decorators to the Fastify instance:
 
@@ -107,7 +107,7 @@ The plugin adds the following decorators to the Fastify instance:
 - [hanaPool](#hanaPool)
 - [hana](#hana)
 
-## utill functions
+## util functions
 
 - [namedParameterBindingSupport](#namedParameterBindingSupport)
 
