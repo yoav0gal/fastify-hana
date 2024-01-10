@@ -18,14 +18,14 @@ export default fp<HanaOptions>(
      */
     async function executeQuery(
       query: string,
-      parameters: ExecuteQueryParameters
+      parameters: ExecuteQueryParameters = []
     ) {
       //Convert named parameter binding format to the hana client index based binding format
       if (!Array.isArray(parameters)) {
         [query, parameters] = namedParameterBindingSupport(query, parameters);
       }
 
-      const conn = await pool.getConnection();
+      const conn = pool.getConnection();
       try {
         const result = await conn.exec(query, parameters);
         return result;
@@ -47,11 +47,11 @@ export default fp<HanaOptions>(
     ) {
       const conn = await pool.getConnection();
       try {
-        await conn.setAutoCommit(false);
+        conn.setAutoCommit(false);
         await actions(conn);
-        await conn.commit();
+        conn.commit();
       } catch (err) {
-        await conn.rollback();
+        conn.rollback();
         throw err;
       } finally {
         conn.disconnect();
@@ -64,9 +64,9 @@ export default fp<HanaOptions>(
     fastify.decorate("executeInTransaction", executeInTransaction);
 
     // Clear the pool on application close
-    fastify.addHook("onClose", async (_instance, done) => {
+    //@ts-ignore
+    fastify.addHook("onClose", async (_instance) => {
       await pool.clear();
-      done();
     });
   },
   {
@@ -76,4 +76,4 @@ export default fp<HanaOptions>(
 );
 
 export { namedParameterBindingSupport } from "./namedParametersSupport";
-export { HanaOptions } from "./types";
+export type { HanaOptions } from "./types";
